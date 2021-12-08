@@ -44,5 +44,8 @@ namespace CoreDeneme.Model
 
 
 
+
+
+
     }
 }
