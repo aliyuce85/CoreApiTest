@@ -41,5 +41,6 @@ namespace CoreDeneme.Model
         [Column(TypeName = "bit")]
         public bool IsAvailable { get; set; }
 
+
     }
 }
