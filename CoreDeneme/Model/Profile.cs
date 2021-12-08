@@ -42,5 +42,7 @@ namespace CoreDeneme.Model
         public bool IsAvailable { get; set; }
 
 
+
+
     }
 }
