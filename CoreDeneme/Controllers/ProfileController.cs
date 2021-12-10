@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,11 +16,19 @@ namespace CoreDeneme.Controllers
         {
             _repository = profileRepository;
         }
+        /// <summary>
+        /// Short, descriptive title of the operation
+        /// </summary>
+        /// <remarks>
+        /// More elaborate description
+        /// </remarks>
+        /// <param name="id">Here is the description for ID.</param>
         [HttpGet]
-        public IActionResult Index()
+        public async Task<List<Model.Profile>> Index()
         {
+            var a = await _repository.GetFirstProfileName();
             var model = _repository.GetAll().ToList();
-            return View(model);
+            return model;
         }
     }
 }
