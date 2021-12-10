@@ -10,10 +10,11 @@ namespace CoreDeneme.Repositories
 {
     public class ProfileRepository : GenericRepository<Profile>, IProfileRepository
     {
+
         public ProfileRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-
         }
+
         public async Task<string> GetFirstProfileName()
         {
             return await GetAll().Select(x => x.Customer_Name).FirstOrDefaultAsync();
