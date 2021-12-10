@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CoreDeneme.Abstract;
+using CoreDeneme.Data;
+using CoreDeneme.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RabbitMqUi.Models;
 using System;
@@ -11,18 +14,46 @@ namespace RabbitMqUi.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ISmtpConfiguration _smtpConfig;
+        private readonly IPublisherService _publisherService;
+        private readonly IDataModel<User> _userListData;
+        public HomeController(IDataModel<User> userListData, ISmtpConfiguration smtpConfig, IPublisherService publisherService)
         {
-            _logger = logger;
+            _userListData = userListData;
+            _smtpConfig = smtpConfig;
+            _publisherService = publisherService;
         }
+
 
         public IActionResult Index()
         {
             return View();
         }
-
+        [HttpPost]
+        public IActionResult MailSend(PostMailViewModel postMailViewModel)
+        {
+            _publisherService.Enqueue(
+                                       PrepareMessages(postMailViewModel),
+                                       "EmailQuee"
+                                     );
+            return View();
+        }
+        private IEnumerable<MailMessageData> PrepareMessages(PostMailViewModel postMailViewModel)
+        {
+            var users = _userListData.GetData().ToList();
+            var messages = new List<MailMessageData>();
+            for (int i = 0; i < users.Count; i++)
+            {
+                messages.Add(new MailMessageData()
+                {
+                    To = users[i].Email.ToString(),
+                    From = _smtpConfig.User,
+                    Subject = postMailViewModel.Post.Title,
+                    Body = postMailViewModel.Post.Content
+                });
+            }
+            return messages;
+        }
         public IActionResult Privacy()
         {
             return View();

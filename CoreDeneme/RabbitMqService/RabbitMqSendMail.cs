@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace CoreDeneme.RabbitMqService
 {
-    public interface IRabbitMqService<T>
+    public class RabbitMqSendMail
     {
-        public void SendMail(T model);
     }
 }

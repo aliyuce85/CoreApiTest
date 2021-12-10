@@ -1,3 +1,7 @@
+using CoreDeneme.Abstract;
+using CoreDeneme.Data;
+using CoreDeneme.Model;
+using CoreDeneme.RabbitMqService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +28,13 @@ namespace RabbitMqUi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddScoped<IRabbitMqService, RabbitMq>();
+            services.AddScoped<IRabbitMqConfiguration, RabbitMqConfiguration>();
+            services.AddScoped<IObjectConvertFormat, ObjectConvertFormatManager>();
+            services.AddScoped<IDataModel<User>, UsersDataModel>();
+            services.AddScoped<ISmtpConfiguration, SmtpConfiguration>();
+            services.AddScoped<IPublisherService, PublisherManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
