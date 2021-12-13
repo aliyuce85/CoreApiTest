@@ -1,6 +1,5 @@
 ﻿using CoreDeneme.Entity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,14 +12,9 @@ namespace CoreDeneme.Controllers
     public class ProfileController : Controller
     {
         private readonly IProfileRepository _repository;
-        IConfiguration _configuration;
-    
-        public ProfileController(IProfileRepository profileRepository, IConfiguration configuration)
+        public ProfileController(IProfileRepository profileRepository)
         {
             _repository = profileRepository;
-            _configuration = configuration;
-        
-        
         }
         /// <summary>
         /// Short, descriptive title of the operation
@@ -32,10 +26,9 @@ namespace CoreDeneme.Controllers
         [HttpGet]
         public async Task<List<Model.Profile>> Index()
         {
-            //var a = await _repository.GetFirstProfileName();
-            //var model = _repository.GetAll().ToList();
-            var c = _configuration.GetSection("ConnectionStrings:DevConnection");
-            return null;
+            var a = await _repository.GetFirstProfileName();
+            var model = _repository.GetAll().ToList();
+            return model;
         }
     }
 }

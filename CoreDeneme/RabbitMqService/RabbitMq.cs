@@ -27,7 +27,7 @@ namespace CoreDeneme.RabbitMqService
             {
                 HostName = "localhost",
                 UserName = "guest",
-                Password = "guest",
+                Password = "guest"
             };
 
             var connection = factory.CreateConnection();

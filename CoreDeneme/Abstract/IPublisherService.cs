@@ -7,6 +7,6 @@ namespace CoreDeneme.Abstract
 {
     public interface IPublisherService
     {
-        void Enqueue<T>(IEnumerable<T> queueDataModels, string queueName) where T : class;
+        Task Enqueue<T>(IEnumerable<T> queueDataModels, string queueName) where T : class;
     }
 }
