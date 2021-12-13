@@ -19,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using CoreDeneme.Abstract;
 using CoreDeneme.RabbitMqService;
 using CoreDeneme.Data;
+using CoreDeneme.ConsumerService;
 
 namespace CoreDeneme
 {
@@ -42,15 +43,16 @@ namespace CoreDeneme
             
             // servisin ismi ve servisin implement edildiði sýnýfý yazýyoruz ve bize onun nesnesini oluþturuyor
             services.AddScoped<IProfileRepository, ProfileRepository>();
-
             //services.AddScoped(typeof(IRepository<>),typeof(GenericRepository<>));
+
             services.AddScoped<IRabbitMqService, RabbitMq>();
             services.AddScoped<IRabbitMqConfiguration, RabbitMqConfiguration>();
             services.AddScoped<IObjectConvertFormat, ObjectConvertFormatManager>();
+            services.AddScoped<IMailSender, MailSender>();
             services.AddScoped<IDataModel<User>, UsersDataModel>();
             services.AddScoped<ISmtpConfiguration, SmtpConfiguration>();
             services.AddScoped<IPublisherService, PublisherManager>();
-
+            services.AddScoped<IConsumerService, ConsumerManager>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });

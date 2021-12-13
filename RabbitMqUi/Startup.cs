@@ -1,10 +1,12 @@
 using CoreDeneme.Abstract;
+using CoreDeneme.ConsumerService;
 using CoreDeneme.Data;
 using CoreDeneme.Model;
 using CoreDeneme.RabbitMqService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,14 +29,46 @@ namespace RabbitMqUi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllersWithViews();
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
+            });
+            services.AddCap(options =>
+            {
+                options.UseEntityFramework<ApplicationDbContext>();
+                options.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
+
+
+                options.UseRabbitMQ(options =>
+                {
+                    options.ConnectionFactoryOptions = options =>
+                    {
+                        options.Ssl.Enabled = false;
+                        options.HostName = "localhost";
+                        options.UserName = "guest";
+                        options.Password = "guest";
+                        options.Port = 5672;
+                    };
+                });
+            });
 
             services.AddScoped<IRabbitMqService, RabbitMq>();
             services.AddScoped<IRabbitMqConfiguration, RabbitMqConfiguration>();
             services.AddScoped<IObjectConvertFormat, ObjectConvertFormatManager>();
+            services.AddScoped<IMailSender, MailSender>();
             services.AddScoped<IDataModel<User>, UsersDataModel>();
             services.AddScoped<ISmtpConfiguration, SmtpConfiguration>();
             services.AddScoped<IPublisherService, PublisherManager>();
+            services.AddScoped<IConsumerService, ConsumerManager>();
+            services.AddCap(options =>
+            {
+
+                options.UseDashboard(o => o.PathMatch = "/cap-dashboard");
+
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
